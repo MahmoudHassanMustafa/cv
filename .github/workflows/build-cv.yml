@@ -22,17 +22,19 @@ permissions:
 jobs:
     build:
         runs-on: ubuntu-latest
-        timeout-minutes: 15
-        container:
-            image: texlive/texlive:latest
+        timeout-minutes: 10
 
         steps:
             - name: Checkout repo
               uses: actions/checkout@v4
 
-            - name: Compile CV with latexmk
-              run: |
-                  latexmk -pdf -interaction=nonstopmode -halt-on-error cv.tex
+            - name: Compile LaTeX document
+              uses: xu-cheng/latex-action@v3
+              with:
+                  root_file: cv.tex
+                  latexmk_use_xelatex: false
+                  latexmk_shell_escape: false
+                  args: -pdf -file-line-error -interaction=nonstopmode
 
             - name: Check compilation output
               if: failure()
