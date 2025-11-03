@@ -68,8 +68,13 @@ jobs:
             - name: Prepare deployment directory
               if: github.ref == 'refs/heads/main'
               run: |
+                  if [ ! -f cv.pdf ]; then
+                      echo "❌ Error: cv.pdf not found!"
+                      exit 1
+                  fi
                   mkdir -p deploy
                   cp cv.pdf deploy/
+                  echo "✅ PDF prepared for deployment:"
                   ls -lh deploy/
 
             - name: Deploy PDF to GitHub Pages
@@ -88,7 +93,21 @@ jobs:
               run: |
                   REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
                   USER_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+                  # GitHub Pages URLs are case-sensitive - convert to lowercase
+                  REPO_NAME_LOWER=$(echo "$REPO_NAME" | tr '[:upper:]' '[:lower:]')
+
                   echo "✅ CV deployed successfully!"
-                  echo "🔗 Shareable link: https://$USER_NAME.github.io/$REPO_NAME/cv.pdf"
                   echo ""
-                  echo "::notice title=📄 CV Ready::Your CV is available at: https://$USER_NAME.github.io/$REPO_NAME/cv.pdf"
+                  echo "📋 Repository: $REPO_NAME"
+                  echo "👤 Username: $USER_NAME"
+                  echo ""
+                  echo "🔗 Shareable link: https://$USER_NAME.github.io/$REPO_NAME_LOWER/cv.pdf"
+                  echo ""
+                  echo "⚠️  If you get 404, try these URLs:"
+                  echo "   - https://$USER_NAME.github.io/$REPO_NAME_LOWER/cv.pdf"
+                  echo "   - https://$USER_NAME.github.io/$REPO_NAME/cv.pdf"
+                  echo ""
+                  echo "📝 Make sure GitHub Pages is enabled in Settings → Pages"
+                  echo "   Source: Deploy from branch → gh-pages → / (root)"
+                  echo ""
+                  echo "::notice title=📄 CV Ready::Your CV should be available at: https://$USER_NAME.github.io/$REPO_NAME_LOWER/cv.pdf (check repo Settings → Pages if 404)"
