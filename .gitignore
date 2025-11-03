@@ -324,3 +324,16 @@ TSWLatexianTemp*
 # option is specified. Footnotes are the stored in a file with suffix Notes.bib.
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
+
+# Ignore Obsidian workspace state
+.obsidian/workspace*
+.obsidian/workspace-mobile.json
+
+# Ignore cache, logs, and temp files
+.obsidian/cache/
+.obsidian/backups/
+.obsidian/logs/
+
+# System cruft
+.DS_Store
+Thumbs.db

@@ -1,0 +1,207 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot,
+    top=2 cm,
+    bottom=2 cm,
+    left=2 cm,
+    right=2 cm,
+    footskip=1.0 cm,
+]{geometry}
+\usepackage[explicit]{titlesec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{primaryColor}{RGB}{0, 79, 144}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+\usepackage[
+    pdftitle={Mahmoud Hassan Mustafa Kamal's CV},
+    pdfauthor={Mahmoud Hassan Mustafa Kamal},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref}
+\usepackage[pscoord]{eso-pic}
+\usepackage{calc}
+\usepackage{bookmark}
+\usepackage{lastpage}
+\usepackage{changepage}
+\usepackage{paracol}
+\usepackage{ifthen}
+\usepackage{needspace}
+\usepackage{iftex}
+
+% Ensure that generated pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+\usepackage[default, type1]{sourcesanspro}
+
+% Some settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+\pagestyle{empty}
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\topskip}{0pt}
+\setlength{\columnsep}{0.15cm}
+
+\makeatletter
+\let\ps@customFooterStyle\ps@plain
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small Mahmoud Hassan Mustafa Kamal - Page \thepage{} of \pageref*{LastPage}}
+}{}{}
+\makeatother
+
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{
+    \needspace{4\baselineskip}
+    \Large\color{primaryColor}
+}{
+}{
+}{
+    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]\hspace{-0.1cm}
+}[]
+\titlespacing{\section}{
+    -1pt
+}{
+    0.3 cm
+}{
+    0.2 cm
+}
+
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+}
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{1 cm, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\color{primaryColor}\linespread{1.5}
+}{
+    \par\kern\topsep
+}
+
+\newcommand{\placelastupdatedtext}{%
+  \AddToShipoutPictureFG*{%
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0.2 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{}\hspace{\widthof{}}
+    }}}%
+  }%
+}
+
+\let\hrefWithoutArrow\href
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+\begin{document}
+
+\newcommand{\AND}{\unskip
+	\cleaders\copy\ANDbox\hskip\wd\ANDbox
+	\ignorespaces
+}
+\newsavebox\ANDbox
+\sbox\ANDbox{}
+
+\placelastupdatedtext
+
+\begin{header}
+	\fontsize{30 pt}{30 pt}
+	\textbf{Mahmoud Hassan Mustafa Kamal} \\
+	\vspace{0.3 cm}
+	\normalsize \fontsize{15 pt}{15 pt} \textbf{Software Engineer}
+	\vspace{0.3 cm}
+	
+	\normalsize
+	\mbox{\hrefWithoutArrow{mailto:mahmoudhassanalridini@gmail.com}{{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}mahmoudhassanalridini@gmail.com}}%
+	\kern 0.25 cm%
+	\AND%
+	\kern 0.25 cm%
+	\mbox{\hrefWithoutArrow{tel:+201092454261}{{\footnotesize\faPhone*}\hspace*{0.13cm}+201092454261}}%
+	\kern 0.25 cm%
+	\AND%
+	\kern 0.25 cm%
+	\mbox{\hrefWithoutArrow{https://linkedin.com/in/mahmoud-hassan-alridini}{{\footnotesize\faLinkedinIn}\hspace*{0.13cm}mahmoud-hassan-alridini}}%
+	\kern 0.25 cm%
+	\AND%
+	\kern 0.25 cm%
+	\mbox{\hrefWithoutArrow{https://github.com/MahmoudHassanMustafa}{{\footnotesize\faGithub}\hspace*{0.13cm}MahmoudHassanMustafa}}%
+\end{header}
+
+\vspace{0.3 cm - 0.3 cm}
+
+\input{sections/summary}
+
+\vspace{0.2 cm}
+
+\input{sections/skills}
+
+\vspace{0.2 cm}
+
+\input{sections/experience}
+
+\vspace{0.4 cm}
+
+\input{sections/education}
+
+\end{document}
