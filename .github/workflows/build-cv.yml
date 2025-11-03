@@ -2,25 +2,63 @@ name: Build CV PDF
 
 on:
     push:
+        branches:
+            - main
         paths:
             - "cv.tex"
             - "sections/**.tex"
+            - ".github/workflows/build-cv.yml"
+    workflow_dispatch:
+
+# Cancel in-progress builds when a new commit is pushed
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+    actions: write
 
 jobs:
     build:
         runs-on: ubuntu-latest
+        timeout-minutes: 15
+        container:
+            image: texlive/texlive:latest
+
         steps:
             - name: Checkout repo
               uses: actions/checkout@v4
 
-            - name: Install LaTeX
-              run: sudo apt-get install -y texlive-full
+            - name: Compile CV with latexmk
+              run: |
+                  latexmk -pdf -interaction=nonstopmode -halt-on-error cv.tex
 
-            - name: Compile CV
-              run: pdflatex cv.tex
+            - name: Check compilation output
+              if: failure()
+              run: |
+                  echo "=== LaTeX Log ==="
+                  cat cv.log || echo "No log file found"
 
-            - name: Upload PDF
+            - name: Generate artifact name with timestamp
+              id: artifact-name
+              run: |
+                  TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
+                  echo "name=CV_$TIMESTAMP" >> $GITHUB_OUTPUT
+                  echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+
+            - name: Upload PDF artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: CV
+                  name: ${{ steps.artifact-name.outputs.name }}
                   path: cv.pdf
+                  retention-days: 30
+                  if-no-files-found: error
+
+            - name: Upload to latest
+              uses: actions/upload-artifact@v4
+              with:
+                  name: CV-latest
+                  path: cv.pdf
+                  retention-days: 90
+                  if-no-files-found: error
