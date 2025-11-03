@@ -34,7 +34,7 @@ jobs:
                   root_file: cv.tex
                   latexmk_use_xelatex: false
                   latexmk_shell_escape: false
-                  args: -pdf -file-line-error -interaction=nonstopmode
+                  args: -pdf -file-line-error -interaction=nonstopmode -halt-on-error
 
             - name: Check compilation output
               if: failure()
