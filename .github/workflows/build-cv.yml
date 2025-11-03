@@ -16,7 +16,7 @@ concurrency:
     cancel-in-progress: true
 
 permissions:
-    contents: read
+    contents: write # Needed to deploy to gh-pages
     actions: write
 
 jobs:
@@ -64,3 +64,31 @@ jobs:
                   path: cv.pdf
                   retention-days: 90
                   if-no-files-found: error
+
+            - name: Prepare deployment directory
+              if: github.ref == 'refs/heads/main'
+              run: |
+                  mkdir -p deploy
+                  cp cv.pdf deploy/
+                  ls -lh deploy/
+
+            - name: Deploy PDF to GitHub Pages
+              if: github.ref == 'refs/heads/main'
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./deploy
+                  publish_branch: gh-pages
+                  force_orphan: true
+                  user_name: github-actions[bot]
+                  user_email: github-actions[bot]@users.noreply.github.com
+
+            - name: Generate shareable link
+              if: github.ref == 'refs/heads/main'
+              run: |
+                  REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+                  USER_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+                  echo "✅ CV deployed successfully!"
+                  echo "🔗 Shareable link: https://$USER_NAME.github.io/$REPO_NAME/cv.pdf"
+                  echo ""
+                  echo "::notice title=📄 CV Ready::Your CV is available at: https://$USER_NAME.github.io/$REPO_NAME/cv.pdf"
